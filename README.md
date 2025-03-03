@@ -61,9 +61,13 @@ Kemudian, buka browser dan akses dashboard di:
 ## 📝 Fitur dalam Dashboard
 
 ✅ Data Overview → Menampilkan gambaran umum dataset.
+
 ✅ Time Analysis → Tren peminjaman berdasarkan hari, bulan, dan jam.
+
 ✅ Weather Analysis → Pengaruh cuaca, suhu, dan kelembapan terhadap peminjaman.
+
 ✅ User Type Analysis → Perbandingan pengguna casual dan registered.
+
 ✅ Filter Interaktif → Memilih tahun, kondisi cuaca, dan faktor lainnya.
 
 ## 📌 Catatan Tambahan
