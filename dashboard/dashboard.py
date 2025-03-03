@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import os
 
 # Pengaturan halaman
 st.set_page_config(page_title="Bike Sharing Dashboard", layout="wide")
@@ -9,7 +10,7 @@ st.set_page_config(page_title="Bike Sharing Dashboard", layout="wide")
 @st.cache_data
 def load_data():
     """Load dataset utama dari main_data.csv."""
-    df = pd.read_csv("main_data.csv")
+    df = pd.read_csv(os.path.join(os.path.dirname(__file__), "main_data.csv"))
     
     # Jika kolom 'dteday' ada, konversi ke datetime
     if 'dteday' in df.columns:
