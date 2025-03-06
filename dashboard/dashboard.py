@@ -364,6 +364,38 @@ with tab3:
     else:
         st.warning("Kolom 'temp_category' atau 'cnt' tidak ditemukan di df_hour.")
 
+    # ------------------------------
+    # 3f. Pengaruh Cuaca terhadap Peminjaman
+    # ------------------------------
+    st.subheader("Pengaruh Kondisi Cuaca terhadap Peminjaman Sepeda")
+
+    if 'weathersit' in df_hour.columns and 'cnt' in df_hour.columns:
+        # Agregasi total peminjaman berdasarkan kondisi cuaca
+        weather_comparison = df_hour.groupby('weathersit').agg(
+            total_peminjaman=('cnt', 'sum')
+        ).reset_index()
+
+        # Membuat visualisasi Pengaruh Cuaca
+        fig, ax = plt.subplots(figsize=(8,5), dpi=100)
+        sns.barplot(x='weathersit', y='total_peminjaman', data=weather_comparison, palette="coolwarm", ax=ax)
+
+        # Menambahkan label dan judul
+        ax.set_xlabel("Kondisi Cuaca", fontsize=10)
+        ax.set_ylabel("Total Peminjaman", fontsize=10)
+        ax.set_title("Pengaruh Kondisi Cuaca terhadap Peminjaman Sepeda", fontsize=12)
+
+        # Menambahkan anotasi jumlah peminjaman di setiap kategori cuaca
+        for i, row in weather_comparison.iterrows():
+            ax.text(i, row.total_peminjaman + 1000, f'{int(row.total_peminjaman):,}',
+                    ha='center', fontsize=9, color='black')
+
+        # Menambahkan grid untuk memperjelas perbedaan jumlah peminjaman
+        plt.grid(axis='y', linestyle='--', alpha=0.7)
+        
+        st.pyplot(fig)
+    else:
+        st.warning("Kolom 'weathersit' atau 'cnt' tidak ditemukan di df_hour.")
+    
 # ------------------------------------
 # TAB 4: USER TYPE ANALYSIS
 # (Perbandingan casual vs registered, jam sibuk vs non-sibuk, weekday vs weekend, dsb.)
@@ -481,33 +513,38 @@ with tab4:
         st.pyplot(fig)
     else:
         st.warning("Kolom 'time_category' atau 'day_type' atau 'cnt' tidak ditemukan di df_hour.")
+    # ------------------------------------------------------
+    # 4e. Analisis Weekday Weekend
+    # ------------------------------------------------------
+    st.subheader("Perbandingan Total Peminjaman Sepeda: Weekday vs Weekend")
 
-    # ------------------------------------------------------
-    # 4e. Analisis Weekday vs Weekend (rata-rata peminjaman)
-    # ------------------------------------------------------
-    st.subheader("Perbandingan Peminjaman Sepeda: Weekday vs Weekend (Hour)")
     if 'day_type' in df_hour.columns and 'cnt' in df_hour.columns:
+        # Agregasi total peminjaman berdasarkan tipe hari
         weekday_weekend_comparison = df_hour.groupby('day_type').agg(
-            avg_peminjaman=('cnt','mean'),
-            total_peminjaman=('cnt','sum')
+            total_peminjaman=('cnt', 'sum'),
+            avg_peminjaman=('cnt', 'mean')
         ).reset_index()
 
+        # Membuat visualisasi Total Peminjaman
         fig, ax = plt.subplots(figsize=(8,5), dpi=100)
-        sns.barplot(x='day_type', y='avg_peminjaman', data=weekday_weekend_comparison, 
-                    palette=['blue','red'], ax=ax)
+        sns.barplot(x='day_type', y='total_peminjaman', data=weekday_weekend_comparison, palette=['blue', 'orange'], ax=ax)
+        
+        # Menambahkan label dan judul
         ax.set_xlabel("Tipe Hari", fontsize=10)
-        ax.set_ylabel("Rata-rata Peminjaman", fontsize=10)
-        ax.set_title("Perbandingan Peminjaman Sepeda: Weekday vs Weekend", fontsize=12)
+        ax.set_ylabel("Total Peminjaman", fontsize=10)
+        ax.set_title("Perbandingan Total Peminjaman Sepeda: Weekday vs Weekend", fontsize=12)
 
+        # Menambahkan anotasi jumlah peminjaman di setiap kategori waktu
         for i, row in weekday_weekend_comparison.iterrows():
-            ax.text(i, row.avg_peminjaman + 10, f'{int(row.avg_peminjaman):,}', 
+            ax.text(i, row.total_peminjaman + 2000, f'{int(row.total_peminjaman):,}',
                     ha='center', fontsize=9, color='black')
 
+        # Menambahkan grid untuk memperjelas perbedaan jumlah peminjaman
         plt.grid(axis='y', linestyle='--', alpha=0.7)
+        
         st.pyplot(fig)
     else:
         st.warning("Kolom 'day_type' atau 'cnt' tidak ditemukan di df_hour.")
-
 # ------------------------------------
 # Bagian Bawah Halaman
 # ------------------------------------
